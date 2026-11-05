@@ -1,0 +1,137 @@
+EMPLOYEE MANAGEMENT DATABASE - SETUP AND COMMANDS
+=================================================
+
+These steps install MySQL on Ubuntu/Debian, connect it to the FastAPI project,
+and show how to add and retrieve employee records. 
+
+1. INSTALL AND START MYSQL
+--------------------------
+
+Run these commands in a Linux terminal:
+
+    sudo apt update
+    sudo apt install mysql-server
+    sudo systemctl enable --now mysql
+    sudo systemctl status mysql
+
+The status command should show that the MySQL service is active. Press q to
+leave the status screen.
+
+2. CREATE THE DATABASE AND A DATABASE USER
+------------------------------------------
+
+Open the MySQL administrator prompt:
+
+    sudo mysql
+
+At the mysql> prompt, run the following SQL. Choose a strong password and
+replace ChangeThisWithAStrongPassword in this SQL before running it:
+
+    CREATE DATABASE IF NOT EXISTS employee_db2;
+    CREATE USER IF NOT EXISTS 'employee_app'@'127.0.0.1'
+      IDENTIFIED BY 'ChangeThisWithAStrongPassword';
+    GRANT ALL PRIVILEGES ON employee_db2.* TO 'employee_app'@'127.0.0.1';
+    FLUSH PRIVILEGES;
+
+Create the Employee table:
+
+    CREATE TABLE Employee (
+        id INT PRIMARY KEY,
+        name VARCHAR(30) NOT NULL,
+        age INT NOT NULL,
+        salary DECIMAL(10, 2) NOT NULL,
+        desig VARCHAR(50) NOT NULL
+    );
+    EXIT;
+
+3. CONFIGURE THE FASTAPI PROJECT
+--------------------------------
+
+Edit the .env file located in the same folder as employee_mngmnt_sys.py:
+
+    cd "/home/ruksyed615/Desktop/trainings_sl/API'S/Day_7"
+    nano .env
+
+Set these values, replacing the password with the same password used when
+creating the MySQL user:
+
+    DB_HOST=127.0.0.1
+    DB_USER=employee_app
+    DB_PASSWORD=ChangeThisWithAStrongPassword
+    DB_NAME=employee_db2
+
+Save and exit nano with Ctrl+O, Enter, then Ctrl+X. Keep the .env file private;
+do not share or commit your database password.
+
+4. INSTALL PYTHON PACKAGES AND START THE API
+--------------------------------------------
+
+From the project root:
+
+    cd /home/ruksyed615/Desktop/trainings_sl
+    source .venv/bin/activate
+    python -m pip install fastapi uvicorn mysql-connector-python python-dotenv
+    uvicorn employee_mngmnt_sys:app --app-dir "API'S/Day_7" --reload --host 127.0.0.1 --port 8002
+
+Keep this terminal open while using the API. Open the frontend at:
+
+    http://127.0.0.1:8002/ui/
+
+The interactive API documentation is at:
+
+    http://127.0.0.1:8002/docs
+
+5. ADD AN EMPLOYEE THROUGH THE API
+----------------------------------
+
+In another terminal, send a POST request. Use an ID that is not already in
+the Employee table; this example uses 1001:
+
+    curl -X POST http://127.0.0.1:8002/addEmployee \
+      -H "Content-Type: application/json" \
+      -d '{"id":1001,"name":"Sam Lee","age":30,"salary":50000,"desig":"Developer"}'
+
+Expected response:
+
+    {"message":"Employee Added Successfully"}
+
+You can also add an employee using the form on the frontend at /ui/.
+
+6. RETRIEVE EMPLOYEE RECORDS
+----------------------------
+
+Get every employee as JSON:
+
+    curl http://127.0.0.1:8002/getAllEmployees
+
+Get one employee by ID:
+
+    curl http://127.0.0.1:8002/employeeByID/1001
+
+Or connect directly to MySQL:
+
+    mysql -h 127.0.0.1 -u employee_app -p employee_db2
+
+Enter the database user's password when prompted, then run:
+
+    SELECT * FROM Employee ORDER BY id;
+    SELECT COUNT(*) FROM Employee;
+
+Exit the MySQL prompt with:
+
+    EXIT;
+
+The database can also be inspected and managed in a MySQL client such as
+MySQL Workbench by connecting to host 127.0.0.1 with the employee_app user.
+
+VALIDATION RULES
+----------------
+
+The API requires a unique positive employee ID, a name of 3-30 characters,
+an age from 18 to 60, a salary of at least 25000, and a designation of
+1-50 characters. If the example ID is already in use, choose another unused
+ID before sending the request.
+
+
+
+

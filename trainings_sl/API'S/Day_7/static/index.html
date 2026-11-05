@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Employee Management</title>
+  <link rel="stylesheet" href="/ui/styles.css">
+  <script src="/ui/app.js" defer></script>
+</head>
+<body>
+  <main class="page">
+    <header class="page-header">
+      <div>
+        <p class="eyebrow">EMPLOYEE MANAGEMENT</p>
+        <h1>Employee directory</h1>
+        <p class="subtitle">View and manage the employees saved in your database.</p>
+      </div>
+      <a class="api-link" href="/docs">API docs</a>
+    </header>
+
+    <section class="summary" aria-label="Employee summary">
+      <span>Total employees</span>
+      <strong id="employee-count">—</strong>
+    </section>
+
+    <section class="card">
+      <h2 id="form-title">Add an employee</h2>
+      <form id="employee-form">
+        <label>
+          Employee ID
+          <input id="employee-id" name="id" type="number" min="1" step="1" required>
+        </label>
+        <label>
+          Name
+          <input name="name" type="text" minlength="3" maxlength="30" required>
+        </label>
+        <label>
+          Age
+          <input name="age" type="number" min="18" max="60" step="1" required>
+        </label>
+        <label>
+          Salary
+          <input name="salary" type="number" min="25000" step="0.01" required>
+        </label>
+        <label>
+          Designation
+          <input name="desig" type="text" maxlength="50" required>
+        </label>
+        <div class="form-actions">
+          <button class="primary-button" type="submit" id="save-button">Add employee</button>
+          <button class="secondary-button" type="button" id="cancel-edit" hidden>Cancel edit</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="card">
+      <div class="directory-header">
+        <div>
+          <h2>Employees</h2>
+          <p class="subtitle">Employee information currently stored in the database.</p>
+        </div>
+        <label class="search">
+          <span class="visually-hidden">Filter employees</span>
+          <input id="search" type="search" placeholder="Filter by name or designation">
+        </label>
+      </div>
+      <p id="status" class="status" role="status" aria-live="polite"></p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Age</th>
+              <th>Salary</th>
+              <th>Designation</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="employee-rows"></tbody>
+        </table>
+      </div>
+      <p id="empty-state" class="empty-state" hidden>No employees found.</p>
+    </section>
+  </main>
+</body>
+</html>

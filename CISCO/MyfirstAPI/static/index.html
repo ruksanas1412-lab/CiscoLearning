@@ -1,0 +1,251 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Management Dashboard</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="app">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="brand-icon">E</div>
+            <div>
+                <h2>EmployHub</h2>
+                <span>Management System</span>
+            </div>
+        </div>
+
+        <div class="menu-label">MENU</div>
+
+        <nav>
+            <a href="#" class="nav-link active" id="dashboardLink">
+                <span>▦</span> Dashboard
+            </a>
+            <a href="#employeeSection" class="nav-link">
+                <span>♙</span> Employees
+            </a>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <div class="admin-avatar">A</div>
+            <div>
+                <strong>Administrator</strong>
+                <small>Admin Account</small>
+            </div>
+        </div>
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+        <header class="topbar">
+            <div>
+                <h1>Dashboard</h1>
+                <p>Welcome back! Here's your employee overview.</p>
+            </div>
+
+            <button class="primary-btn" onclick="openAddModal()">
+                + Add Employee
+            </button>
+        </header>
+
+
+        <!-- STATISTICS -->
+        <section class="stats-grid">
+
+            <div class="stat-card">
+                <div class="stat-icon blue">♙</div>
+                <p>Total Employees</p>
+                <h2 id="totalEmployees">0</h2>
+                <span>Registered employees</span>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon green">₹</div>
+                <p>Average Salary</p>
+                <h2 id="averageSalary">₹0</h2>
+                <span>Across all employees</span>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon purple">▤</div>
+                <p>Highest Salary</p>
+                <h2 id="highestSalary">₹0</h2>
+                <span>Top salary</span>
+            </div>
+
+        </section>
+
+
+        <!-- EMPLOYEE TABLE -->
+        <section class="employee-section" id="employeeSection">
+
+            <div class="section-header">
+                <div>
+                    <h2>Employee Directory</h2>
+                    <p>Manage and view all employee records.</p>
+                </div>
+
+                <button class="secondary-btn" onclick="loadEmployees()">
+                    ↻ Refresh
+                </button>
+            </div>
+
+            <div class="table-toolbar">
+                <div class="search-box">
+                    <span>⌕</span>
+                    <input
+                        type="text"
+                        id="searchInput"
+                        placeholder="Search employee by name..."
+                    >
+                </div>
+
+                <span id="employeeLabel">0 employees</span>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>EMPLOYEE NAME</th>
+                            <th>AGE</th>
+                            <th>DESIGNATION</th>
+                            <th>SALARY</th>
+                            <th>ACTIONS</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="employeeTable">
+                        <tr>
+                            <td colspan="6" class="empty-message">
+                                Loading employees...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </section>
+
+        <footer>
+            EmployHub © 2026 | Employee Management System
+        </footer>
+
+    </main>
+
+</div>
+
+
+<!-- ADD / EDIT EMPLOYEE MODAL -->
+<div class="modal-overlay" id="employeeModal">
+
+    <div class="modal">
+
+        <div class="modal-header">
+            <div>
+                <h2 id="modalTitle">Add Employee</h2>
+                <p>Enter the employee information below.</p>
+            </div>
+
+            <button class="close-btn" onclick="closeModal()">×</button>
+        </div>
+
+        <form id="employeeForm">
+
+            <div class="form-group" id="idGroup">
+                <label>Employee ID</label>
+                <input
+                    type="number"
+                    id="empId"
+                    placeholder="Enter employee ID"
+                    min="1"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label>Full Name</label>
+                <input
+                    type="text"
+                    id="empName"
+                    placeholder="Enter employee name"
+                    minlength="3"
+                    maxlength="30"
+                    required
+                >
+            </div>
+
+            <div class="form-row">
+
+                <div class="form-group">
+                    <label>Age</label>
+                    <input
+                        type="number"
+                        id="empAge"
+                        placeholder="Age"
+                        min="18"
+                        max="60"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label>Salary (₹)</label>
+                    <input
+                        type="number"
+                        id="empSalary"
+                        placeholder="Salary"
+                        min="25000"
+                        step="0.01"
+                        required
+                    >
+                </div>
+
+            </div>
+
+            <div class="form-group">
+                <label>Designation</label>
+                <input
+                    type="text"
+                    id="empDesig"
+                    placeholder="e.g. Software Engineer"
+                    maxlength="50"
+                    required
+                >
+            </div>
+
+            <div class="modal-actions">
+                <button type="button" class="cancel-btn" onclick="closeModal()">
+                    Cancel
+                </button>
+
+                <button type="submit" class="primary-btn" id="saveBtn">
+                    Add Employee
+                </button>
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- NOTIFICATION -->
+<div id="toast" class="toast"></div>
+
+<script src="/static/script.js"></script>
+
+</body>
+</html>
